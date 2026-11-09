@@ -1,1 +1,1 @@
-# riichi-mahjong-bot
+# Riichi Mahjong Bot
