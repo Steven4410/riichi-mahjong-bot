@@ -25,12 +25,10 @@ void add_discard(char *new_discard) {
 
 int remove_deck(char *removed_tile) {
 	for (int i = 0; i < deck_size; i++) {
-		printf("\n%s", deck[i]);
 		if (strcmp(deck[i], removed_tile) == 0) {
 			memmove(&deck[i], &deck[i+1], sizeof(char*) * (deck_size - (i + 1)));
 			deck = realloc(deck, sizeof(char*)*(deck_size-1));
 			deck_size--;
-			printf("\n%s", deck[i]);
 			return 0;
 		}
 	}
