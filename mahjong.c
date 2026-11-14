@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 char *library[] = {"d1", "d1", "d1", "d1", "d2", "d2", "d2", "d2", "d3", "d3", "d3", "d3", "d4", "d4", "d4", "d4", "d5", "d5", "d5", "d5", "d6", "d6", "d6", "d6", "d7", "d7", "d7", "d7", "d8", "d8", "d8", "d8", "d9", "d9", "d9", "d9", "b1", "b1", "b1", "b1", "b2", "b2", "b2", "b2", "b3", "b3", "b3", "b3", "b4", "b4", "b4", "b4", "b5", "b5", "b5", "b5", "b6", "b6", "b6", "b6", "b7", "b7", "b7", "b7", "b8", "b8", "b8", "b8", "b9", "b9", "b9", "b9", "c1", "c1", "c1", "c1", "c2", "c2", "c2", "c2", "c3", "c3", "c3", "c3", "c4", "c4", "c4", "c4", "c5", "c5", "c5", "c5", "c6", "c6", "c6", "c6", "c7", "c7", "c7", "c7", "c8", "c8", "c8", "c8", "c9", "c9", "c9", "c9", "gd", "gd", "gd", "gd", "wd", "wd", "wd", "wd", "rd", "rd", "rd", "rd", "nw", "nw", "nw", "nw", "ew", "ew", "ew", "ew", "sw", "sw", "sw", "sw", "ww", "ww", "ww", "ww"};
 
@@ -10,6 +12,11 @@ char **discard_pile;
 size_t discard_size = 0;
 char **hand;
 size_t hand_size = 0;
+
+void clear_input_stream() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
 
 //for initializing starting deck
@@ -82,6 +89,7 @@ int main(int argc, char **argv) {
 		printf("Invalid, must be between 1 and 4: ");
 		scanf("%d", &player_pos);
 	}
+	clear_input_stream();
 	
 	
 	//get starting hand
@@ -93,6 +101,7 @@ int main(int argc, char **argv) {
 			i--;
 		}
 	}
+	clear_input_stream();
 	
 	//get discards if player isn't first
 	if (player_pos > 1) {
@@ -108,27 +117,58 @@ int main(int argc, char **argv) {
 			}
 		}
 	}
+	clear_input_stream();
 	
 	//TODO: Enter loop for rounds starting with player's turn
-	
-	printf("\nHand: ");
-	for (int i = 0; i < hand_size; i++) {
-		printf("%s ", hand[i]);
+	char quit_choice = 'y';
+	bool riichi = false;
+	bool victory = false;
+	while (tolower(quit_choice) != 'n') {
+		int success = -1;
+		while (success != 0) {
+			printf("Enter your draw: ");
+			scanf("%s", tile_drawn);
+			success = add_hand(tile_drawn);
+		}
+		clear_input_stream();
+		success = -1;
+		
+		//Victory check function?
+		
+		if (victory == true) {
+			printf("You have a winning hand! Run program to play again.\n");
+		}
+		
+		//TODO: get best discard choice.
+		printf("You should discard \"\"\n");
+		while (success != 0) {
+			printf("Enter your discard: ");
+			scanf("%s", tile_drawn);
+			success = remove_hand(tile_drawn);
+		}
+		clear_input_stream();
+		
+		//TODO: Riichi  check function?
+		if (riichi == true) {
+			printf("Declare Riichi!");
+		}
+		
+		printf("\nOpponents discard: ");
+		for (int i = 0; i < 3; i++) {
+			scanf("%s", tile_drawn);
+			success = remove_deck(tile_drawn);
+			if (success != 0) {
+				i--;
+			}
+			else {
+				add_discard(tile_drawn);
+			}
+		}
+		clear_input_stream();
+		printf("Continue? (y/n): ");
+		scanf("%c", &quit_choice);
+		clear_input_stream();
 	}
-	remove_deck("c3");
-	printf("\nDeck: ");
-	for (int i = 0; i < deck_size; i++) {
-		printf("%s ", deck[i]);
-	}
-	remove_hand("b2");
-	printf("\nHand: ");
-	for (int i = 0; i < hand_size; i++) {
-		printf("%s ", hand[i]);
-	}
-	printf("\nDiscard: ");
-	for (int i = 0; i < discard_size; i++) {
-		printf("%s ", discard_pile[i]);
-	}
-  	printf("\n");
+	printf("\nQuiting program\n");
   	return 0;
 }
