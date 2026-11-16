@@ -1,5 +1,5 @@
-// Dots, Bamboo, Characters, Winds, Dragons
-char *library[] ={
+// Dots (1-9), Bamboo (1-9), Characters (1-9), Winds (East, South, West, North), Dragons (White, Green, Red)
+char *library[] = {
 "1d", "1d", "1d", "1d",
 "2d", "2d", "2d", "2d",
 "3d", "3d", "3d", "3d",
