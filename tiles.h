@@ -34,3 +34,11 @@ char *library[] = {
 "wd", "wd", "wd", "wd",
 "gd", "gd", "gd", "gd",
 "rd", "rd", "rd", "rd"};
+
+// Library without duplicates
+char *library_simple[] = {
+"1d", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d",
+"1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b",
+"1c", "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c",
+"ew","sw", "ww","nw",
+"wd", "gd", "rd"};
