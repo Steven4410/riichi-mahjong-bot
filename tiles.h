@@ -1,5 +1,5 @@
 // Dots (1-9), Bamboo (1-9), Characters (1-9), Winds (East, South, West, North), Dragons (White, Green, Red)
-char *library[] = {
+static const char *library[136] = {
 "1d", "1d", "1d", "1d",
 "2d", "2d", "2d", "2d",
 "3d", "3d", "3d", "3d",
@@ -33,12 +33,82 @@ char *library[] = {
 "nw", "nw", "nw", "nw",
 "wd", "wd", "wd", "wd",
 "gd", "gd", "gd", "gd",
-"rd", "rd", "rd", "rd"};
+"rd", "rd", "rd", "rd"
+};
 
 // Library without duplicates
-char *library_simple[] = {
+static const char *library_simple[34] = {
 "1d", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d",
 "1b", "2b", "3b", "4b", "5b", "6b", "7b", "8b", "9b",
 "1c", "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c",
 "ew", "sw", "ww", "nw",
-"wd", "gd", "rd"};
+"wd", "gd", "rd"
+};
+
+// Library of triplets
+static const char *triplets[34][3] = {
+{"1d", "1d", "1d"},
+{"2d", "2d", "2d"},
+{"3d", "3d", "3d"},
+{"4d", "4d", "4d"},
+{"5d", "5d", "5d"},
+{"6d", "6d", "6d"},
+{"7d", "7d", "7d"},
+{"8d", "8d", "8d"},
+{"9d", "9d", "9d"},
+{"1b", "1b", "1b"},
+{"2b", "2b", "2b"},
+{"3b", "3b", "3b"},
+{"4b", "4b", "4b"},
+{"5b", "5b", "5b"},
+{"6b", "6b", "6b"},
+{"7b", "7b", "7b"},
+{"8b", "8b", "8b"},
+{"9b", "9b", "9b"},
+{"1c", "1c", "1c"},
+{"2c", "2c", "2c"},
+{"3c", "3c", "3c"},
+{"4c", "4c", "4c"},
+{"5c", "5c", "5c"},
+{"6c", "6c", "6c"},
+{"7c", "7c", "7c"},
+{"8c", "8c", "8c"},
+{"9c", "9c", "9c"},
+{"ew", "ew", "ew"},
+{"sw", "sw", "sw"},
+{"ww", "ww", "ww"},
+{"nw", "nw", "nw"},
+{"wd", "wd", "wd"},
+{"gd", "gd", "gd"},
+{"rd", "rd", "rd"}
+};
+
+// Library of sequences
+// Fourth tile is preceding tile. Used for partial meld lookup
+// "00" is used in place of null for terminal melds
+static const char *sequences[24][4] = {
+{"1d", "2d", "3d", "00"},
+{"2d", "3d", "4d", "1d"},
+{"3d", "4d", "5d", "2d"},
+{"4d", "5d", "6d", "3d"},
+{"5d", "6d", "7d", "4d"},
+{"6d", "7d", "8d", "5d"},
+{"7d", "8d", "9d", "6d"},
+{"8d", "9d", "00", "7d"},
+{"1b", "2b", "3b", "00"},
+{"2b", "3b", "4b", "1b"},
+{"3b", "4b", "5b", "2b"},
+{"4b", "5b", "6b", "3b"},
+{"5b", "6b", "7b", "4b"},
+{"6b", "7b", "8b", "5b"},
+{"7b", "8b", "9b", "6b"},
+{"8b", "9b", "00", "7b"},
+{"1c", "2c", "3c", "00"},
+{"2c", "3c", "4c", "1c"},
+{"3c", "4c", "5c", "2c"},
+{"4c", "5c", "6c", "3c"},
+{"5c", "6c", "7c", "4c"},
+{"6c", "7c", "8c", "5c"},
+{"7c", "8c", "9c", "6c"},
+{"8c", "9c", "00", "7c"}
+};
