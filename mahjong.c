@@ -22,7 +22,7 @@ void clear_input_stream() {
 void initialize_deck() {
 	for (int i = 0; i < deck_size; i++) {
 		deck = realloc(deck, sizeof(char*) * (i+1));
-		deck[i] = library[i];
+		deck[i] = strndup(library[i], strlen(library[i])+1);
 	}
 }
 
@@ -51,6 +51,34 @@ int remove_deck(char *tile_to_remove) {
 int add_hand(char *new_tile) {
 	for (int i = 0; i < deck_size; i++) {
 		if (strcmp(deck[i], new_tile) == 0) {
+			//Sort tile into hand
+			int new_tile_value = 0;
+			//get tile library index
+			for (int j = 0; j < 34; j++) {
+				if (strcmp(library_simple[j], new_tile) == 0) {
+					new_tile_value = j;
+					break;
+				}
+			}
+			// find place in hand
+			for (int cur_tile = 0; cur_tile < hand_size; cur_tile++) {
+				int cur_tile_value = 0;
+				//get tile in hand's library index
+				for (int j = 0; j < 34; j++) {
+					if (strcmp(library_simple[j], hand[cur_tile]) == 0) {
+						cur_tile_value = j;
+						break;
+					}
+				}
+				// if the tile in hand's index is greater or equal to new one, put new before it in hand
+				if (new_tile_value <= cur_tile_value) {
+					hand = realloc(hand, sizeof(char*)*(hand_size+1));
+					memmove(&hand[cur_tile+1], &hand[cur_tile], sizeof(char*) * (hand_size - cur_tile ));
+					hand[cur_tile] = strndup(new_tile, strlen(new_tile)+1);
+					hand_size++;
+					return remove_deck(new_tile);
+				}
+			}
 			hand = realloc(hand, sizeof(char*)*(hand_size+1));
 			hand[hand_size] = strndup(new_tile, strlen(new_tile));
 			hand_size++;
@@ -115,13 +143,14 @@ int main(int argc, char **argv) {
 				add_discard(tile_drawn);
 			}
 		}
+		clear_input_stream();
 	}
-	clear_input_stream();
 	
 	//TODO: Enter loop for rounds starting with player's turn
 	char quit_choice = 'y';
 	bool riichi = false;
 	bool victory = false;
+	
 	while (tolower(quit_choice) != 'n') {
 		int success = -1;
 		while (success != 0) {
@@ -130,6 +159,13 @@ int main(int argc, char **argv) {
 			success = add_hand(tile_drawn);
 		}
 		clear_input_stream();
+		
+		printf("Current Hand:");
+		for (int i = 0; i < hand_size; i++) {
+			printf(" %s", hand[i]);
+		}
+		printf("\n");
+		
 		success = -1;
 		
 		//Victory check function?
@@ -168,6 +204,6 @@ int main(int argc, char **argv) {
 		scanf("%c", &quit_choice);
 		clear_input_stream();
 	}
-	printf("\nQuiting program\n");
+	printf("\nQuiting Program\n");
   	return 0;
 }
