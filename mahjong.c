@@ -382,8 +382,8 @@ int main(int argc, char **argv) {
 		
 		//get discards if player isn't first
 		if (player_pos > 1) {
-			printf("\nEnter Your Opponents' discard (One tile at a time): ");
 			for (int i = 0; i < player_pos - 1; i++) {
+				printf("\nEnter Your Opponents' discard (One tile at a time): ");
 				scanf("%2s", tile_drawn);
 				int success = remove_deck(tile_drawn);
 				if (success != 0) {
@@ -441,12 +441,22 @@ int main(int argc, char **argv) {
 			clear_input_stream();
 			
 			bool deck_empty = false;
+			bool end_game = false;
 			for (int i = 0; i < 3; i++) {
 				if (deck_size == 0) {
 					printf("\nDeck is empty\n");
 					deck_empty = true;
 					break;
 				}
+
+				printf("Continue round? (y/n): ");
+				scanf(" %c", &quit_choice);
+				clear_input_stream();
+				if (tolower(quit_choice) != 'n') {
+					end_game = true;
+					break;
+				}
+				
 				printf("\nEnter Your Opponents' discard (One at a time): ");
 				scanf("%2s", tile_drawn);
 				success = remove_deck(tile_drawn);
@@ -454,7 +464,7 @@ int main(int argc, char **argv) {
 					i--;
 				}
 			}
-			if (deck_empty) {
+			if (deck_empty || end_game) {
 				break;
 			}
 
