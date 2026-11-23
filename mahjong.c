@@ -44,7 +44,7 @@ int remove_deck(char *tile_to_remove) {
 			return 0;
 		}
 	}
-	printf("\nTile not in deck.\n");
+	printf("Tile not in deck.\n");
 	return 1;
 }
 
@@ -329,20 +329,20 @@ bool discard() {
 
 	// Checks for victory
 	if (melds == 4 && pairs == 1) {
-		printf("Declare Victory!\n");
+		printf("\nDeclare Victory!\n");
 		victory = true;
 	// Determines best tile to discard
 	} else {
 		if (worst_single_value != NULL) {
-			printf("You should discard \"%s\", since it is not part of any pair or sequence and can only be turned into a pair by %d tiles.\n", worst_single_value, min_single_copies_in_deck);
+			printf("\nYou should discard \"%s\", since it is not part of any pair or sequence and can only be turned into a pair by %d tiles.\n", worst_single_value, min_single_copies_in_deck);
 		} else if (worst_sequence_value != NULL) {
-			printf("You should discard \"%s\", since you have no standalone tiles and this sequence can only be completed by %d tiles.\n", worst_sequence_value, min_seq_copies_in_deck);
+			printf("\nYou should discard \"%s\", since you have no standalone tiles and this sequence can only be completed by %d tiles.\n", worst_sequence_value, min_seq_copies_in_deck);
 		} else if (worst_pair_value != NULL) {
-			printf("You should discard \"%s\", since you have no standalone tiles and this pair can only be completed by %d tiles.\n", worst_pair_value, min_pair_copies_in_deck);
+			printf("\nYou should discard \"%s\", since you have no standalone tiles and this pair can only be completed by %d tiles.\n", worst_pair_value, min_pair_copies_in_deck);
 		}
 		// Checks for Riichi
 		if ((melds == 4 && pairs == 0) || (melds == 3 && partial_melds == 1 && pairs >= 1)) {
-			printf("Declare Riichi, you are one tile away from victory.\n");
+			printf("\nDeclare Riichi, you are one tile away from victory.\n");
 			printf("Steal the first tile that completes your hand.\n");
 			victory = true;
 		}
@@ -356,9 +356,25 @@ bool discard() {
 }
 
 int main(int argc, char **argv) {
+	// Opening Text
+	printf("\nWelcome to Riichi Mahjong Bot!\n");
+	printf("\nYour goal is to obtain four melds and a pair out of fourteen tiles.\n");
+	printf("If you enter you and your opponents' tiles, this bot will inform you on the best tile to discard.\n");
+	printf("Each tile has a number and a suit, which should be entered as two characters.\n");
+	printf("\nHere are some examples: \n");
+	printf("1 character == \"1c\" \n");
+	printf("3 bamboo == \"3b\" \n");
+	printf("7 dots == \"7d\" \n");
+	printf("east wind == \"ew\" \n");
+	printf("green dragon == \"gd\" \n");
+	printf("\nThis program is designed for closed hands only.\n");
+	printf("This means you should only steal from other players once you have declared Riichi.\n");
 	// Loop for multiple games
 	char play_again = 'y';
+	char quit_choice = 'y';
+	bool end_game = false;
 	while (tolower(play_again) != 'n') {
+		quit_choice = 'y';
 		int player_pos;
 		char tile_drawn[3];
 
@@ -372,7 +388,7 @@ int main(int argc, char **argv) {
 		initialize_deck();
 		
 		// Get player position
-		printf("Enter player position: ");
+		printf("\nEnter player position: ");
 		scanf("%d", &player_pos);
 		while (player_pos < 1 || player_pos > 4) {
 			printf("Invalid, must be between 1 and 4: ");
@@ -383,9 +399,28 @@ int main(int argc, char **argv) {
 		// Get discards if player isn't first
 		if (player_pos > 1) {
 			for (int i = 0; i < player_pos - 1; i++) {
-				printf("\nEnter Your Opponents' discard (One tile at a time): ");
+				printf("\nEnter Your Opponents' discard (One at a time): ");
 				scanf("%2s", tile_drawn);
+				clear_input_stream();
 				int success = remove_deck(tile_drawn);
+				if (success != 0) {
+					i--;
+				}
+				printf("Continue round? (y/n): ");
+				scanf(" %c", &quit_choice);
+				clear_input_stream();
+				if (tolower(quit_choice) == 'n') {
+					break;
+				}
+			}
+		}
+		
+		// Get starting hand
+		if (tolower(quit_choice) != 'n') {
+			printf("\nEnter your starting hand (Space separated): ");
+			for (int i = 0; i < 13; i++) {
+				scanf("%2s", tile_drawn);
+				int success = add_hand(tile_drawn);
 				if (success != 0) {
 					i--;
 				}
@@ -393,34 +428,22 @@ int main(int argc, char **argv) {
 			clear_input_stream();
 		}
 		
-		// Get starting hand
-		for (int i = 0; i < 13; i++) {
-			printf("Enter your starting hand (one tile at a time): ");
-			scanf("%2s", tile_drawn);
-			int success = add_hand(tile_drawn);
-			if (success != 0) {
-				i--;
-			}
-		}
-		clear_input_stream();
-		
 		// Game loop
-		char quit_choice = 'y';
 		while (tolower(quit_choice) != 'n') {
 			if (deck_size == 0) {
-				printf("Deck is empty\n");
+				printf("\nDeck is empty\n");
 				break;
 			}
 			// Player Turn
 			int success = -1;
 			while (success != 0) {
-				printf("Enter your draw: ");
+				printf("\nEnter your draw: ");
 				scanf("%2s", tile_drawn);
 				success = add_hand(tile_drawn);
 			}
 			clear_input_stream();
 			
-			printf("Current Hand: ");
+			printf("\nCurrent Hand: ");
 			for (int i = 0; i < hand_size; i++) {
 				printf(" %s", hand[i]);
 			}
@@ -433,7 +456,7 @@ int main(int argc, char **argv) {
 
 			success = -1;
 			while (success != 0) {
-				printf("Enter your discard: ");
+				printf("\nEnter your discard: ");
 				scanf("%2s", tile_drawn);
 				success = remove_hand(tile_drawn);
 			}
@@ -441,15 +464,15 @@ int main(int argc, char **argv) {
 
 			// Opponents' Turn
 			bool deck_empty = false;
-			bool end_game = false;
+			end_game = false;
 			for (int i = 0; i < 3; i++) {
+				printf("\nEnter Your Opponents' discard (One at a time): ");
 				if (deck_size == 0) {
 					printf("\nDeck is empty\n");
 					deck_empty = true;
 					break;
 				}
 				
-				printf("\nEnter Your Opponents' discard (One at a time): ");
 				scanf("%2s", tile_drawn);
 				clear_input_stream();
 				success = remove_deck(tile_drawn);
