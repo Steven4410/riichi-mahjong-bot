@@ -448,6 +448,14 @@ int main(int argc, char **argv) {
 					deck_empty = true;
 					break;
 				}
+				
+				printf("\nEnter Your Opponents' discard (One at a time): ");
+				scanf("%2s", tile_drawn);
+				clear_input_stream();
+				success = remove_deck(tile_drawn);
+				if (success != 0) {
+					i--;
+				}
 
 				printf("Continue round? (y/n): ");
 				scanf(" %c", &quit_choice);
@@ -456,22 +464,10 @@ int main(int argc, char **argv) {
 					end_game = true;
 					break;
 				}
-				
-				printf("\nEnter Your Opponents' discard (One at a time): ");
-				scanf("%2s", tile_drawn);
-				success = remove_deck(tile_drawn);
-				if (success != 0) {
-					i--;
-				}
 			}
 			if (deck_empty || end_game) {
 				break;
 			}
-
-			clear_input_stream();
-			printf("Continue round? (y/n): ");
-			scanf(" %c", &quit_choice);
-			clear_input_stream();
 		}
 
 		// Free deck, hand, and discard
