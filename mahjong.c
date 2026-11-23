@@ -390,11 +390,12 @@ int main(int argc, char **argv) {
 		// Get player position
 		printf("\nEnter player position: ");
 		scanf("%d", &player_pos);
+		clear_input_stream();
 		while (player_pos < 1 || player_pos > 4) {
 			printf("Invalid, must be between 1 and 4: ");
 			scanf("%d", &player_pos);
+			clear_input_stream();
 		}
-		clear_input_stream();
 		
 		// Get discards if player isn't first
 		if (player_pos > 1) {
