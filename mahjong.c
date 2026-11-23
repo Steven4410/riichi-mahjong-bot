@@ -452,7 +452,7 @@ int main(int argc, char **argv) {
 				printf("Continue round? (y/n): ");
 				scanf(" %c", &quit_choice);
 				clear_input_stream();
-				if (tolower(quit_choice) != 'n') {
+				if (tolower(quit_choice) == 'n') {
 					end_game = true;
 					break;
 				}
