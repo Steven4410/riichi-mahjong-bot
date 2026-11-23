@@ -12,13 +12,13 @@ size_t discard_size = 0;
 char **hand;
 size_t hand_size = 0;
 
+// For clearing input between scans
 void clear_input_stream() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-
-//for initializing starting deck
+// For initializing starting deck
 void initialize_deck() {
 	for (int i = 0; i < deck_size; i++) {
 		deck = realloc(deck, sizeof(char*) * (i+1));
@@ -26,14 +26,14 @@ void initialize_deck() {
 	}
 }
 
-//for adding to the discard pile
+// For adding to the discard pile
 void add_discard(char *new_discard) {
 	discard_pile = realloc(discard_pile, sizeof(char*) * (discard_size+1));
 	discard_pile[discard_size] = strndup(new_discard, strlen(new_discard));
 	discard_size++;
 }
 
-//for removing tiles drawn by player and discarded by opponents
+// For removing tiles discarded by opponents
 int remove_deck(char *tile_to_remove) {
 	for (int i = 0; i < deck_size; i++) {
 		if (strcmp(deck[i], tile_to_remove) == 0) {
@@ -90,7 +90,7 @@ int add_hand(char *new_tile) {
 	return 1;
 }
 
-//for removing tile discarded by player and adding it to discard
+// For removing tile discarded by player and adding it to discard
 int remove_hand(char *tile_to_remove) {
 	for (int i = 0; i < hand_size; i++) {
 		if (strcmp(hand[i], tile_to_remove) == 0) {
@@ -327,10 +327,11 @@ bool discard() {
 		}
 	}
 
-
+	// Checks for victory
 	if (melds == 4 && pairs == 1) {
 		printf("Declare Victory!\n");
 		victory = true;
+	// Determines best tile to discard
 	} else {
 		if (worst_single_value != NULL) {
 			printf("You should discard \"%s\", since it is not part of any pair or sequence and can only be turned into a pair by %d tiles.\n", worst_single_value, min_single_copies_in_deck);
@@ -339,25 +340,24 @@ bool discard() {
 		} else if (worst_pair_value != NULL) {
 			printf("You should discard \"%s\", since you have no standalone tiles and this pair can only be completed by %d tiles.\n", worst_pair_value, min_pair_copies_in_deck);
 		}
+		// Checks for Riichi
 		if ((melds == 4 && pairs == 0) || (melds == 3 && partial_melds == 1 && pairs >= 1)) {
 			printf("Declare Riichi, you are one tile away from victory.\n");
 			printf("Steal the first tile that completes your hand.\n");
 			victory = true;
 		}
 	}
-
 	// Frees duplicate hand
 	for (int i = 0; i < hand_copy_size; i++) {
 		free(hand_copy[i]);
 	}
 	free(hand_copy);
-
 	return victory;
 }
 
 int main(int argc, char **argv) {
+	// Loop for multiple games
 	char play_again = 'y';
-
 	while (tolower(play_again) != 'n') {
 		int player_pos;
 		char tile_drawn[3];
@@ -371,7 +371,7 @@ int main(int argc, char **argv) {
 
 		initialize_deck();
 		
-		//get player pos
+		// Get player position
 		printf("Enter player position: ");
 		scanf("%d", &player_pos);
 		while (player_pos < 1 || player_pos > 4) {
@@ -380,7 +380,7 @@ int main(int argc, char **argv) {
 		}
 		clear_input_stream();
 		
-		//get discards if player isn't first
+		// Get discards if player isn't first
 		if (player_pos > 1) {
 			for (int i = 0; i < player_pos - 1; i++) {
 				printf("\nEnter Your Opponents' discard (One tile at a time): ");
@@ -393,7 +393,7 @@ int main(int argc, char **argv) {
 			clear_input_stream();
 		}
 		
-		//get starting hand
+		// Get starting hand
 		for (int i = 0; i < 13; i++) {
 			printf("Enter your starting hand (one tile at a time): ");
 			scanf("%2s", tile_drawn);
@@ -404,15 +404,14 @@ int main(int argc, char **argv) {
 		}
 		clear_input_stream();
 		
-		//Enter loop for rounds starting with player's turn
+		// Game loop
 		char quit_choice = 'y';
-		
 		while (tolower(quit_choice) != 'n') {
 			if (deck_size == 0) {
 				printf("Deck is empty\n");
 				break;
 			}
-
+			// Player Turn
 			int success = -1;
 			while (success != 0) {
 				printf("Enter your draw: ");
@@ -439,7 +438,8 @@ int main(int argc, char **argv) {
 				success = remove_hand(tile_drawn);
 			}
 			clear_input_stream();
-			
+
+			// Opponents' Turn
 			bool deck_empty = false;
 			bool end_game = false;
 			for (int i = 0; i < 3; i++) {
@@ -470,7 +470,7 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		// Free deck, hand, and discard
+		// Free deck, hand, and discard at end of game
 		for (size_t i = 0; i < deck_size; i++) {
 			free(deck[i]);
 		}
