@@ -341,6 +341,8 @@ bool discard() {
 		}
 		if ((melds == 4 && pairs == 0) || (melds == 3 && partial_melds == 1 && pairs >= 1)) {
 			printf("Declare Riichi, you are one tile away from victory.\n");
+			printf("Steal the first tile that completes your hand.\n");
+			victory = true;
 		}
 	}
 
