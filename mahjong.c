@@ -368,7 +368,7 @@ int main(int argc, char **argv) {
 	printf("east wind == \"ew\" \n");
 	printf("green dragon == \"gd\" \n");
 	printf("\nSeparate tiles with a space when entering multiple.\n");
-	printf("Example \"gd 1c\"\n");
+	printf("Example: \"gd 1c\"\n");
 	printf("\nThis program is designed for closed hands only.\n");
 	printf("This means you should only steal from other players once you have declared Riichi.\n");
 	// Loop for multiple games
