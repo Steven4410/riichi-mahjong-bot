@@ -44,7 +44,7 @@ int remove_deck(char *tile_to_remove) {
 			return 0;
 		}
 	}
-	printf("Tile not in deck.\n");
+	printf("%s not in deck.\n", tile_to_remove);
 	return 1;
 }
 
@@ -86,7 +86,7 @@ int add_hand(char *new_tile) {
 			return remove_deck(new_tile);
 		}
 	}
-	printf("\nThat is not one of the remaining tiles in the deck.\n");
+	printf("\n%s is not one of the remaining tiles in the deck, please enter a replacement: ", new_tile);
 	return 1;
 }
 
@@ -102,7 +102,7 @@ int remove_hand(char *tile_to_remove) {
 			return 0;
 		}
 	}
-	printf("\nTile not in hand.\n");
+	printf("\n%s not in hand. Enter a replacement tile\n", tile_to_remove);
 	return 1;
 }
 
