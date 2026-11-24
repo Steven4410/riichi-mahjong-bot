@@ -373,9 +373,9 @@ int main(int argc, char **argv) {
 	printf("This means you should only steal from other players once you have declared Riichi.\n");
 	// Loop for multiple games
 	char play_again = 'y';
-	char quit_choice = 'y';
+	bool cont_choice = true;
 	while (tolower(play_again) != 'n') {
-		quit_choice = 'y';
+		cont_choice = true;
 		int player_pos;
 		char tile_drawn[3] = "  ";
 
@@ -400,25 +400,21 @@ int main(int argc, char **argv) {
 		
 		// Get discards if player isn't first
 		if (player_pos > 1) {
-			printf("\nEnter Your Opponents' discards. Enter \"xx\" when done: ");
-			while (strcmp(tile_drawn, "xx") != 0) {		
+			printf("\nEnter Your Opponents' discards. Enter \"xx\" to end opponent turn or \"yy\" to end game: ");
+			while (strcmp(tile_drawn, "xx") != 0 && strcmp(tile_drawn, "yy") != 0) {		
 				scanf("%2s", tile_drawn);
-				if (strcmp(tile_drawn, "xx") != 0) {
+				if (strcmp(tile_drawn, "xx") != 0 && strcmp(tile_drawn, "yy") != 0) {
 					remove_deck(tile_drawn);
 				}
+				if (strcmp(tile_drawn, "yy") == 0) {
+					cont_choice = false;
+				}
 			}
-			
 			clear_input_stream();
-			printf("Continue game? (y/n): ");
-			scanf(" %c", &quit_choice);
-			clear_input_stream();
-			if (tolower(quit_choice) == 'n') {
-				break;
-			}
 		}
 		
 		// Get starting hand
-		if (tolower(quit_choice) != 'n') {
+		if (cont_choice) {
 			printf("\nEnter your starting hand (13 tiles): ");
 			for (int i = 0; i < 13; i++) {
 				scanf("%2s", tile_drawn);
@@ -431,11 +427,7 @@ int main(int argc, char **argv) {
 		}
 		
 		// Game loop
-		while (tolower(quit_choice) != 'n') {
-			if (deck_size == 0) {
-				printf("\nDeck is empty\n");
-				break;
-			}
+		while (cont_choice) {
 			// Player Turn
 			int success = -1;
 			while (success != 0) {
@@ -465,32 +457,17 @@ int main(int argc, char **argv) {
 			clear_input_stream();
 
 			// Opponents' Turn
-			bool deck_empty = false;
-			printf("\nEnter Your Opponents' discards. Enter \"xx\" when done: ");
-			while (strcmp(tile_drawn, "xx") != 0) {
-				if (deck_size == 0) {
-					printf("\nDeck is empty\n");
-					deck_empty = true;
-					break;
-				}
-				
+			printf("\nEnter Your Opponents' discards. Enter \"xx\" to end opponent turn or \"yy\" to end game: ");
+			while (strcmp(tile_drawn, "xx") != 0 && strcmp(tile_drawn, "yy") != 0) {		
 				scanf("%2s", tile_drawn);
-				if (strcmp(tile_drawn, "xx") != 0) {
+				if (strcmp(tile_drawn, "xx") != 0 && strcmp(tile_drawn, "yy") != 0) {
 					remove_deck(tile_drawn);
 				}
-
+				if (strcmp(tile_drawn, "yy") == 0) {
+					cont_choice = false;
+				}
 			}
-			if (deck_empty) {
-				break;
-			}
-			
 			clear_input_stream();
-			printf("Continue game? (y/n): ");
-			scanf(" %c", &quit_choice);
-			clear_input_stream();
-			if (tolower(quit_choice) == 'n') {
-				break;
-			}
 		}
 
 		// Free deck, hand, and discard at end of game
