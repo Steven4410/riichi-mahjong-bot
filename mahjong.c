@@ -367,6 +367,8 @@ int main(int argc, char **argv) {
 	printf("7 dots == \"7d\" \n");
 	printf("east wind == \"ew\" \n");
 	printf("green dragon == \"gd\" \n");
+	printf("\nSeparate tiles with a space when entering multiple.\n");
+	printf("Example \"gd 1c\"\n");
 	printf("\nThis program is designed for closed hands only.\n");
 	printf("This means you should only steal from other players once you have declared Riichi.\n");
 	// Loop for multiple games
@@ -398,7 +400,7 @@ int main(int argc, char **argv) {
 		
 		// Get discards if player isn't first
 		if (player_pos > 1) {
-			printf("\nEnter Your Opponents' discards (\"xx\") when done: ");
+			printf("\nEnter Your Opponents' discards. Enter \"xx\" when done: ");
 			while (strcmp(tile_drawn, "xx") != 0) {		
 				scanf("%2s", tile_drawn);
 				if (strcmp(tile_drawn, "xx") != 0) {
@@ -417,7 +419,7 @@ int main(int argc, char **argv) {
 		
 		// Get starting hand
 		if (tolower(quit_choice) != 'n') {
-			printf("\nEnter your starting hand (Space separated): ");
+			printf("\nEnter your starting hand (13 tiles): ");
 			for (int i = 0; i < 13; i++) {
 				scanf("%2s", tile_drawn);
 				int success = add_hand(tile_drawn);
@@ -464,7 +466,7 @@ int main(int argc, char **argv) {
 
 			// Opponents' Turn
 			bool deck_empty = false;
-			printf("\nEnter Your Opponents' discards (\"xx\") when done: ");
+			printf("\nEnter Your Opponents' discards. Enter \"xx\" when done: ");
 			while (strcmp(tile_drawn, "xx") != 0) {
 				if (deck_size == 0) {
 					printf("\nDeck is empty\n");
