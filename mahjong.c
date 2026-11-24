@@ -372,11 +372,10 @@ int main(int argc, char **argv) {
 	// Loop for multiple games
 	char play_again = 'y';
 	char quit_choice = 'y';
-	bool end_game = false;
 	while (tolower(play_again) != 'n') {
 		quit_choice = 'y';
 		int player_pos;
-		char tile_drawn[3];
+		char tile_drawn[3] = "  ";
 
 		deck = NULL;
 		deck_size = 136;
@@ -399,20 +398,20 @@ int main(int argc, char **argv) {
 		
 		// Get discards if player isn't first
 		if (player_pos > 1) {
-			for (int i = 0; i < player_pos - 1; i++) {
-				printf("\nEnter Your Opponents' discard (One at a time): ");
+			printf("\nEnter Your Opponents' discards (\"xx\") when done: ");
+			while (strcmp(tile_drawn, "xx") != 0) {		
 				scanf("%2s", tile_drawn);
-				clear_input_stream();
-				int success = remove_deck(tile_drawn);
-				if (success != 0) {
-					i--;
+				if (strcmp(tile_drawn, "xx") != 0) {
+					remove_deck(tile_drawn);
 				}
-				printf("Continue round? (y/n): ");
-				scanf(" %c", &quit_choice);
-				clear_input_stream();
-				if (tolower(quit_choice) == 'n') {
-					break;
-				}
+			}
+			
+			clear_input_stream();
+			printf("Continue game? (y/n): ");
+			scanf(" %c", &quit_choice);
+			clear_input_stream();
+			if (tolower(quit_choice) == 'n') {
+				break;
 			}
 		}
 		
@@ -465,9 +464,8 @@ int main(int argc, char **argv) {
 
 			// Opponents' Turn
 			bool deck_empty = false;
-			end_game = false;
-			for (int i = 0; i < 3; i++) {
-				printf("\nEnter Your Opponents' discard (One at a time): ");
+			printf("\nEnter Your Opponents' discards (\"xx\") when done: ");
+			while (strcmp(tile_drawn, "xx") != 0) {
 				if (deck_size == 0) {
 					printf("\nDeck is empty\n");
 					deck_empty = true;
@@ -475,21 +473,20 @@ int main(int argc, char **argv) {
 				}
 				
 				scanf("%2s", tile_drawn);
-				clear_input_stream();
-				success = remove_deck(tile_drawn);
-				if (success != 0) {
-					i--;
+				if (strcmp(tile_drawn, "xx") != 0) {
+					remove_deck(tile_drawn);
 				}
 
-				printf("Continue round? (y/n): ");
-				scanf(" %c", &quit_choice);
-				clear_input_stream();
-				if (tolower(quit_choice) == 'n') {
-					end_game = true;
-					break;
-				}
 			}
-			if (deck_empty || end_game) {
+			if (deck_empty) {
+				break;
+			}
+			
+			clear_input_stream();
+			printf("Continue game? (y/n): ");
+			scanf(" %c", &quit_choice);
+			clear_input_stream();
+			if (tolower(quit_choice) == 'n') {
 				break;
 			}
 		}
